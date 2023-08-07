@@ -7,10 +7,13 @@ const Completed = ({ todoData, check, setTodoData }) => {
   let completedData = todoData.filter(todo => todo.status);
 
   function handleAllDelete() {
+   let allDel=window.confirm("Do You want to Delete All Item !")
+   if(allDel){
     let clearData = todoData.filter((todo) => {
       return todo.status === false
     })
     setTodoData(clearData)
+   }
   }
 
   return (
