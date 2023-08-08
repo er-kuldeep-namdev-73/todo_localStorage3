@@ -72,7 +72,26 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         setTodoCopyData(copyTodoData)
     }
 
-
+    function handleChangeSelect(e){
+        let copyTodoData = [...todoData]
+        if(e.target.value){
+            copyTodoData = copyTodoData.filter((todo) => {
+                return todo.priority === e.target.value
+            })
+            setTodoCopyData(copyTodoData)
+        }
+    }
+    function handleChangeInput(e){
+        let copyTodoData = [...todoData]
+        setTimeout(()=>{
+            if(e.target.value){
+                copyTodoData = copyTodoData.filter((todo) => {
+                    return todo.title === e.target.value
+                })
+                setTodoCopyData(copyTodoData)
+            }
+        },1000)
+    }
     useEffect(() => {
         handleAllData()
     }, [])
@@ -88,19 +107,19 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
                 <Button className="mt-2 ms-1 mb-3" onClick={handleAllData} style={{ cursor: "pointer", color: "white" }}>all</Button>
                 <Button className="mt-2 ms-1 mb-3" onClick={handleCompleted} style={{ cursor: "pointer", color: "white" }}>Completed</Button>
                 <Button className='mt-2 ms-1 mb-3' onClick={handlePending} style={{ cursor: "pointer", color: "white" }}>Pending</Button>
-                <select className='form-select w-25 mt-2 ms-1 mb-3'>
-                    <option>---Please Select Priority---</option>
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
+                <select className='form-select w-25 mt-2 ms-1 mb-3 bg-dark text-light' onClick={handleChangeSelect}>
+                    <option selected disabled>---Please Select Priority---</option>
+                    <option value="high" className='text-danger'>High</option>
+                    <option value="medium" className='text-warning'>Medium</option>
+                    <option value="low" className='text-success'>Low</option>
                 </select>
-                <input type="text" className="form-control w-25 mt-2 ms-1 mb-3"/>
-                <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" , color: "white"}}>Search</Button>
+                <input type="text" className="form-control w-25 mt-2 ms-1 mb-3 bg-dark text-light" onChange={handleChangeInput}/>
+                {/* <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" , color: "white"}}>Search</Button> */}
                 {
                     completedData.length !== 0 &&
                     <>
                         <div className='d-inline'>
-                            <Button variant="contained" color="error" className="float-end my-2" onClick={handleAllDelete}>Clear All Completed Task</Button>
+                            <Button variant="contained" color="error" className="float-end my-2 ms-1" onClick={handleAllDelete}>Clear All Completed Task</Button>
                         </div>
                     </>
                 }
