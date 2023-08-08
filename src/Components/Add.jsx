@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 
-const Add = ({ todoData, setTodoData }) => {
+const Add = ({ todoData, setTodoData,copyTodoData ,setTodoCopyData}) => {
 
     const [value1, setValue1] = useState({
         title: "",
@@ -18,11 +18,8 @@ const Add = ({ todoData, setTodoData }) => {
     const handleAddItem = (e) => {
         e.preventDefault();
         e.target.reset();
-        if (value1.title === "" && value1.priority === "") {
-            toast.error("Please Enter The Value")
-        }
-        else if (value1.title === "" || value1.priority === "") {
-            toast.error("Please Enter The Value")
+        if (value1.priority === "") {
+            toast.error("Please Choose the Priority Option")
         }
         else {
             let index = todoData.slice(-1)[0]?.id
@@ -33,6 +30,7 @@ const Add = ({ todoData, setTodoData }) => {
                 setTodoData([...todoData, { ...value1, id: 1 }]);
             }
         }
+        setTodoCopyData([...copyTodoData, value1])
         setValue1({
             title: "",
             priority: "",
@@ -50,7 +48,7 @@ const Add = ({ todoData, setTodoData }) => {
                 <div className='p-3'>
                     <label className='text-start mb-2 fs-5 text-primary'>Add Item</label><br />
                     {/* <input id="addItem" name="title" placeholder="Please Enter the Item" className='w-100 form-control' onChange={(e) => handleChange(e)} /> */}
-                    <TextField id="addItem" label="Add Item" variant="standard" className='w-100 form-control' name="title" onChange={(e) => handleChange(e)}/><br/>
+                    <TextField id="addItem" label="Add Item" variant="standard" className='w-100 form-control' name="title" onChange={(e) => handleChange(e)} required/><br/>
                     <label className='mt-2 fs-5 text-primary'>Priority</label>
                     {
                         !render &&

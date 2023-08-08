@@ -23,7 +23,8 @@ const Completed = ({ todoData, check, setTodoData }) => {
         completedData.length !== 0 &&
         <>
           <div className='d-inline'>
-            <Button variant="contained" color="success" className="ms-5 float-end m-2" onClick={handleAllDelete}>Clear All Completed Task</Button>
+            <Button variant='contained' color="success" className="mt-2 ms-4 float-start">Archived</Button>
+            <Button variant="contained" color="error" className="float-end m-2" onClick={handleAllDelete}>Clear All Completed Task</Button>
           </div>
         </>
       }
