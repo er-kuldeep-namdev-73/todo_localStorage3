@@ -148,12 +148,22 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
 
     //start Search Function
     function handleSearch() {
-        console.log(copyTodoData)
+        // console.log(copyTodoData)
         let copyData = [...copyTodoData];
+
+
+
         if(searchData.tab==="all"){
             copyData=[...todoData]
         }
-        
+
+        else if(searchData.tab==="completed"){
+            copyData=[...todoData.filter(todo=>todo.status===true)]
+        }
+        else{
+            copyData=[...todoData.filter(todo=>todo.status===false)]
+
+        }
         if(searchData.title && searchData.priority){
             setTodoCopyData(copyData.filter((todo)=>{
                 return todo.title.toLowerCase().includes(searchData.title.toLowerCase()) && todo.priority === searchData.priority
@@ -169,7 +179,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
                 return todo.priority === searchData.priority
             }))
         }
-        console.log(searchData)
+        // console.log(searchData)
     }
     //End Search function
     useEffect(() => {
@@ -182,7 +192,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
             <div className='bg-dark mt-5 text-light rounded p-3'>
                 <div className="justify-content-start d-flex">
                     {
-                        archiveData.length !== 0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve} endIcon={<ArchiveIcon/>}>Archived</Button>
+                        archiveData.length !== 0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve} endIcon={<ArchiveIcon/>}>Archived {archiveData.length}</Button>
                     }
                     <Button className="mt-2 mb-3 btn btn-danger" onClick={handleAllData} style={{ cursor: "pointer", color: "white" }} value="all">all</Button>
                     <Button className="mt-2  mb-3" onClick={handleCompleted} style={{ cursor: "pointer", color: "white" }}>Completed</Button>
@@ -199,7 +209,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
                         completedData.length !== 0 &&
                         <>
                             <div className='d-inline'>
-                                <Button variant="contained" color="error" className="float-end my-2 ms-1" onClick={handleAllDelete} endIcon={<DeleteIcon/>}>Clear All Completed</Button>
+                                <Button variant="contained" color="error" className="my-2 ms-1" onClick={handleAllDelete} endIcon={<DeleteIcon/>}>Clear All Completed {completedData.length}</Button>
                             </div>
                         </>
                     }
@@ -222,7 +232,10 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
                                         <td key={index + 3}>{index + 1}</td>
                                         <td key={index + 4}><input type="checkbox" onChange={(e) => handleStatusChange(e, data.id)} checked={data.status} /></td>
                                         <td key={index + 5} >{
-                                            data.priority === "high" ? <p className='fs-5 text-danger'>{data.title}</p> : data.priority === "medium" ? <p className='fs-5 text-warning'>{data.title}</p> : data.priority === "low" ? <p className='fs-5 text-success'>{data.title}</p> : <p>{data.title}</p>
+                                            data.status===false
+                                            ?
+                                            data.priority === "high" ? <p className='fs-5 text-danger'>{data.title}</p> : data.priority === "medium" ? <p className='fs-5 text-warning'>{data.title}</p> : data.priority === "low" ? <p className='fs-5 text-success'>{data.title}</p> : <p>{data.title}</p>:
+                                            data.priority === "high" ? <strike className='fs-5 text-danger'>{data.title}</strike> : data.priority === "medium" ? <strike className='fs-5 text-warning'>{data.title}</strike> : data.priority === "low" ? <strike className='fs-5 text-success'>{data.title}</strike> : <strike>{data.title}</strike>
                                         }</td>
                                         <td>
                                             {

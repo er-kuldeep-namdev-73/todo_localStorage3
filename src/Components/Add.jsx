@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, TextField } from '@mui/material';
 // import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
-import AddTaskIcon from '@mui/icons-material/AddTask';
+import AddIcon from '@mui/icons-material/Add';
 
 const Add = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
 
@@ -93,7 +93,7 @@ const Add = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
                     }
 
                     <Button className='mt-2 w-50' variant='contained' type
-                        ="submit" endIcon={<AddTaskIcon />}>Add Item</Button>
+                        ="submit" endIcon={<AddIcon />}>Add Item</Button>
                 </div>
             </form>
             {/* end form */}
