@@ -2,14 +2,24 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@mui/material'
 
 const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
+
     if (todoData.length == 0 && copyTodoData.length == 0)
         return;
 
+    //start State
     const [archiveData, setArchiveData] = useState([])
+    const [searchData, setSearchData] = useState({
+        priority: "",
+        title: "",
+        tab:''
+    })
+    //end State
 
+    //start status filter
     let completedData = todoData.filter(todo => todo.status);
+    //end status filter
 
-
+    //start handleStatusChange function
     const handleStatusChange = (e, id) => {
         let copyTodoData = [...todoData]
         copyTodoData.map(todo => {
@@ -20,7 +30,10 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         setTodoData(copyTodoData)
         setTodoCopyData(copyTodoData)
     }
+    //End handleStatusChange function
 
+
+    //Start AllDelete function
     function handleAllDelete() {
         let allDel = window.confirm("Do You want to Delete All Item !")
         if (allDel) {
@@ -34,13 +47,17 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
             setTodoCopyData(clearData)
         }
     }
+    //End AllDelete function
 
+    //Start Archieve function
     function handleArchieve() {
         setTodoData([...todoData, ...archiveData])
         setArchiveData([])
         setTodoCopyData([...todoData, ...archiveData])
     }
+    //End Archieve function
 
+    //Start Delete Function
     function handleDelete(e, id) {
         let del = window.confirm(`Do You Want to Delete this Item!`)
         if (del) {
@@ -52,46 +69,104 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
             setTodoCopyData(removeData)
         }
     }
+    //End Delete function
+
+    //Start completed show function
     function handleCompleted() {
         let copyTodoData = [...todoData]
         copyTodoData = copyTodoData.filter((todo) => {
             return todo.status === true
         })
         setTodoCopyData(copyTodoData)
+        setSearchData({...searchData,tab:"completed"})
     }
-    function handleAllData() {
+    //end completed show function
+
+    //start AllData function
+    function handleAllData(e) {
         let copyTodoData = [...todoData]
         setTodoCopyData(copyTodoData)
-    }
+        setSearchData({...searchData,tab:"all"})
 
+        // console.log(value)
+    }
+    //End AllData function
+
+    //Start Pending function
     function handlePending() {
         let copyTodoData = [...todoData]
         copyTodoData = copyTodoData.filter((todo) => {
             return todo.status !== true
         })
         setTodoCopyData(copyTodoData)
+        setSearchData({...searchData,tab:"pending"})
+
+    }
+    //end pending function
+
+    //Start SelectChanges function
+    // function handleChangeSelect(e){
+    //     let copyTodoData = [...todoData]
+    //     // console.log(e.target.value)
+    //     // if(e.target.value === "selected1"){
+    //         // setSearchData({...searchData,[e.target.name]:e.target.value})
+    //         // handleAllData()
+    //         // setTodoData(copyTodoData)
+    //     // }
+    //     // else if(e.target.value){
+    //         // copyTodoData = copyTodoData.filter((todo) => {
+    //         //     return todo.priority === e.target.value
+    //         // })
+    //         setSearchData({...searchData,[e.target.name]:e.target.value})
+    //         setTodoCopyData(copyTodoData)
+    //     // }
+
+    // }
+    //End SelectChanges function
+
+    //Start handleChangeInput Function
+    function handleChange(e) {
+        // let copyTodoData = [...todoData]
+        // console.log(e.target.value)
+        // if(e.target.value){
+        //     copyTodoData = copyTodoData.filter((todo) => {
+        //         return todo.title === e.target.value
+        //     })
+        // setTodoCopyData(copyTodoData)
+        setSearchData({ ...searchData, [e.target.name]: e.target.value })
+
+        // }
+        // else if(e.target.value===""){
+        //     handleAllData()
+        // }
+    }
+    //End handleChangeInput Function
+    function handleSearch() {
+        console.log(copyTodoData)
+        let copyData = [...copyTodoData];
+        if(searchData.tab==="all"){
+            copyData=[...todoData]
+        }
+        
+        if(searchData.title && searchData.priority){
+            setTodoCopyData(copyData.filter((todo)=>{
+                return todo.title === searchData.title && todo.priority === searchData.priority
+            }))
+        }
+        else if(searchData.title){
+            setTodoCopyData(copyData.filter((todo)=>{
+                return todo.title === searchData.title
+            }))
+        }
+        else if(searchData.priority){
+            setTodoCopyData(copyData.filter((todo)=>{
+                return todo.priority === searchData.priority
+            }))
+        }
+        console.log(searchData)
     }
 
-    function handleChangeSelect(e){
-        let copyTodoData = [...todoData]
-        if(e.target.value){
-            copyTodoData = copyTodoData.filter((todo) => {
-                return todo.priority === e.target.value
-            })
-            setTodoCopyData(copyTodoData)
-        }
-    }
-    function handleChangeInput(e){
-        let copyTodoData = [...todoData]
-        setTimeout(()=>{
-            if(e.target.value){
-                copyTodoData = copyTodoData.filter((todo) => {
-                    return todo.title === e.target.value
-                })
-                setTodoCopyData(copyTodoData)
-            }
-        },1000)
-    }
+    //Start Search function
     useEffect(() => {
         handleAllData()
     }, [])
@@ -100,29 +175,29 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         <>
 
             <div className='bg-dark mt-5 text-light rounded p-3'>
-               <div className="justify-content-start d-flex">
-               {
-                archiveData.length!==0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve}>Archived</Button> 
-               }
-                <Button className="mt-2 ms-1 mb-3" onClick={handleAllData} style={{ cursor: "pointer", color: "white" }}>all</Button>
-                <Button className="mt-2 ms-1 mb-3" onClick={handleCompleted} style={{ cursor: "pointer", color: "white" }}>Completed</Button>
-                <Button className='mt-2 ms-1 mb-3' onClick={handlePending} style={{ cursor: "pointer", color: "white" }}>Pending</Button>
-                <select className='form-select w-25 mt-2 ms-1 mb-3 bg-dark text-light' onClick={handleChangeSelect}>
-                    <option selected disabled>---Please Select Priority---</option>
-                    <option value="high" className='text-danger'>High</option>
-                    <option value="medium" className='text-warning'>Medium</option>
-                    <option value="low" className='text-success'>Low</option>
-                </select>
-                <input type="text" className="form-control w-25 mt-2 ms-1 mb-3 bg-dark text-light" onChange={handleChangeInput}/>
-                {/* <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" , color: "white"}}>Search</Button> */}
-                {
-                    completedData.length !== 0 &&
-                    <>
-                        <div className='d-inline'>
-                            <Button variant="contained" color="error" className="float-end my-2 ms-1" onClick={handleAllDelete}>Clear All Completed Task</Button>
-                        </div>
-                    </>
-                }
+                <div className="justify-content-start d-flex">
+                    {
+                        archiveData.length !== 0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve}>Archived</Button>
+                    }
+                    <Button className="mt-2 ms-1 mb-3 btn btn-danger" onClick={handleAllData} style={{ cursor: "pointer", color: "white" }} value="all">all</Button>
+                    <Button className="mt-2 ms-1 mb-3" onClick={handleCompleted} style={{ cursor: "pointer", color: "white" }}>Completed</Button>
+                    <Button className='mt-2 ms-1 mb-3' onClick={handlePending} style={{ cursor: "pointer", color: "white" }}>Pending</Button>
+                    <select className='form-select w-25 mt-2 ms-1 mb-3 bg-dark text-light' onChange={handleChange} name="priority">
+                        <option value="selected1" selected>---Please Select Priority---</option>
+                        <option value="high" className='text-danger'>High</option>
+                        <option value="medium" className='text-warning'>Medium</option>
+                        <option value="low" className='text-success'>Low</option>
+                    </select>
+                    <input type="text" className="form-control w-25 mt-2 ms-1 mb-3 " onChange={handleChange} name="title" placeholder='Enter Item Name for Search' />
+                    <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" }} variant='contained' onClick={handleSearch}>Search</Button>
+                    {
+                        completedData.length !== 0 &&
+                        <>
+                            <div className='d-inline'>
+                                <Button variant="contained" color="error" className="float-end my-2 ms-1" onClick={handleAllDelete}>Clear All Completed Task</Button>
+                            </div>
+                        </>
+                    }
                 </div>
                 <table className='table table-striped rounded'>
                     <thead>
@@ -135,7 +210,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
                         </tr>
                     </thead>
                     {
-                        copyTodoData.length !== 0 && copyTodoData.map((data, index) => {
+                        copyTodoData.length !== 0 ? copyTodoData.map((data, index) => {
                             return (
                                 <tbody key={index + 1}>
                                     <tr key={index + 2} title={`priority : ${data.priority}`}>
@@ -156,9 +231,16 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
                                 </tbody>
                             )
                         })
+                            : <tbody>
+                                <tr>
+                                    <td colSpan={5}>
+                                        <p className='text-center fs-4 m-5 p-5'>No Data Found</p>
+                                    </td>
+                                </tr>
+                            </tbody>
                     }
                 </table>
-                <p className='m-3'>{todoData.length} item(s) left</p>
+                <p className='m-3'>{copyTodoData.length} item(s) left</p>
             </div>
         </>
     )
