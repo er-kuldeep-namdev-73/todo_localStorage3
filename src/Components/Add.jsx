@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Button, TextField } from '@mui/material';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+import { v4 as uuid } from 'uuid';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 
 const Add = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
 
@@ -10,7 +12,8 @@ const Add = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         priority: "",
         status: false
     })
-
+    let id = uuid()
+    const [valid,setValid] = useState(false)
     //state for render priority
     const [render, setRender] = useState(false)
 
@@ -23,22 +26,27 @@ const Add = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
     //Start function AddItem for Submit the data
     const handleAddItem = (e) => {
         e.preventDefault();
-        e.target.reset();
+       
         if (value1.priority === "") {
-            toast.error("Please Choose the Priority Option")
+            // toast.error("Please Choose the Priority Option")
+            setValid(true);
+            return;
         }
         else {
-            let index = todoData.slice(-1)[0]?.id
-            if (index) {
-                setTodoData([...todoData, { ...value1, id: ++index }]);
-                setTodoCopyData([...copyTodoData, { ...value1, id: ++index }])
+            setTodoData([...todoData, { ...value1, id: id }]);
+            setTodoCopyData([...copyTodoData, { ...value1, id: id}])
 
-            }
-            else {
-                setTodoData([...todoData, { ...value1, id: 1 }]);
-                setTodoCopyData([...copyTodoData, { ...value1, id: 1 }])
+            // let index = todoData.slice(-1)[0]?.id
+            // if (index) {
 
-            }
+            // }
+            // else {
+            //     setTodoData([...todoData, { ...value1, id: 1 }]);
+            //     setTodoCopyData([...copyTodoData, { ...value1, id: 1 }])
+
+            // }
+
+
         }
         setValue1({
             title: "",
@@ -49,6 +57,10 @@ const Add = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         setTimeout(() => {
             setRender(false)
         }, 10)
+        e.target.reset();
+
+        setValid(false);
+
     }
 
     //End function AddItem for submit the  data
@@ -58,21 +70,30 @@ const Add = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
             {/* Start form */}
             <form className='bg-light m-5 border-3 border w-75 rounded form-control' onSubmit={handleAddItem}>
                 <div className='p-3'>
-                    <label className='text-start mb-2 fs-5 text-primary'>Add Item</label><br />
+                    <label className='text-start mb-2 fs-5 text-primary'>ToDo Name*</label><br />
                     {/* <input id="addItem" name="title" placeholder="Please Enter the Item" className='w-100 form-control' onChange={(e) => handleChange(e)} /> */}
-                    <input id="addItem" label="Add Item" variant="standard" className='w-100 form-control bg-light' name="title" onChange={(e) => handleChange(e)} required placeholder='Enter Todo Item Name'/><br />
-                    <label className='mt-2 fs-5 text-primary'>Priority *</label>
+                    <input id="addItem" label="Add Item" variant="standard" className='w-100 form-control bg-light' name="title" onChange={(e) => handleChange(e)} required placeholder='Enter Todo Item Name' /><br />
+                    <label className='mt-2 fs-5 text-primary'>Priority*</label>
                     {
                         !render &&
-                        <select className='form-select bg-dark text-light' onChange={(e) => handleChange(e)} name="priority" title="It's a required field">
-                            <option disabled selected className='text-light' value={"select"} >---Please Select Priority---</option>
-                            <option value={"high"} className='text-danger'>high</option>
-                            <option value={"medium"} className='text-warning'>medium</option>
-                            <option value={"low"} className='text-success'>low</option>
-                        </select>
+                        <>
+                            <select className='form-select bg-dark text-light' onChange={(e) => handleChange(e)} name="priority" title="It's a required field">
+                                <option disabled selected className='text-light' value={"select"} >---Please Select Priority---</option>
+                                <option value={"high"} className='text-danger'>high</option>
+                                <option value={"medium"} className='text-warning'>medium</option>
+                                <option value={"low"} className='text-success'>low</option>
+                            </select>
+
+
+                        </>
                     }
+                    {
+                        valid &&    
+                        <p className='text-danger'>Please Select Option</p>
+                    }
+
                     <Button className='mt-2 w-50' variant='contained' type
-                        ="submit">Add Item</Button>
+                        ="submit" endIcon={<AddTaskIcon />}>Add Item</Button>
                 </div>
             </form>
             {/* end form */}

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
+import ArchiveIcon from '@mui/icons-material/Archive';
 
-const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
+
+const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData,setArchiveData }) => {
 
     if (todoData.length == 0 && copyTodoData.length == 0)
         return;
 
     //start State
-    const [archiveData, setArchiveData] = useState([])
     const [searchData, setSearchData] = useState({
         priority: "",
         title: "",
@@ -46,6 +49,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
             setTodoData(clearData)
             setTodoCopyData(clearData)
         }
+        console.log(archiveData);
     }
     //End AllDelete function
 
@@ -141,6 +145,8 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         // }
     }
     //End handleChangeInput Function
+
+    //start Search Function
     function handleSearch() {
         console.log(copyTodoData)
         let copyData = [...copyTodoData];
@@ -150,12 +156,12 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         
         if(searchData.title && searchData.priority){
             setTodoCopyData(copyData.filter((todo)=>{
-                return todo.title === searchData.title && todo.priority === searchData.priority
+                return todo.title.toLowerCase().includes(searchData.title.toLowerCase()) && todo.priority === searchData.priority
             }))
         }
         else if(searchData.title){
             setTodoCopyData(copyData.filter((todo)=>{
-                return todo.title === searchData.title
+                return todo.title.toLowerCase().includes(searchData.title.toLowerCase())
             }))
         }
         else if(searchData.priority){
@@ -165,8 +171,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
         }
         console.log(searchData)
     }
-
-    //Start Search function
+    //End Search function
     useEffect(() => {
         handleAllData()
     }, [])
@@ -177,24 +182,24 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
             <div className='bg-dark mt-5 text-light rounded p-3'>
                 <div className="justify-content-start d-flex">
                     {
-                        archiveData.length !== 0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve}>Archived</Button>
+                        archiveData.length !== 0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve} endIcon={<ArchiveIcon/>}>Archived</Button>
                     }
-                    <Button className="mt-2 ms-1 mb-3 btn btn-danger" onClick={handleAllData} style={{ cursor: "pointer", color: "white" }} value="all">all</Button>
-                    <Button className="mt-2 ms-1 mb-3" onClick={handleCompleted} style={{ cursor: "pointer", color: "white" }}>Completed</Button>
-                    <Button className='mt-2 ms-1 mb-3' onClick={handlePending} style={{ cursor: "pointer", color: "white" }}>Pending</Button>
-                    <select className='form-select w-25 mt-2 ms-1 mb-3 bg-dark text-light' onChange={handleChange} name="priority">
-                        <option value="selected1" selected>---Please Select Priority---</option>
+                    <Button className="mt-2 mb-3 btn btn-danger" onClick={handleAllData} style={{ cursor: "pointer", color: "white" }} value="all">all</Button>
+                    <Button className="mt-2  mb-3" onClick={handleCompleted} style={{ cursor: "pointer", color: "white" }}>Completed</Button>
+                    <Button className='mt-2  mb-3' onClick={handlePending} style={{ cursor: "pointer", color: "white" }}>Pending</Button>
+                    <select className='form-select w-25 mt-2  mb-3 bg-dark text-light' onChange={handleChange} name="priority">
+                        <option value="selected1" selected disabled>---Please Select Priority---</option>
                         <option value="high" className='text-danger'>High</option>
                         <option value="medium" className='text-warning'>Medium</option>
                         <option value="low" className='text-success'>Low</option>
                     </select>
                     <input type="text" className="form-control w-25 mt-2 ms-1 mb-3 " onChange={handleChange} name="title" placeholder='Enter Item Name for Search' />
-                    <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" }} variant='contained' onClick={handleSearch}>Search</Button>
+                    <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" }} variant='contained' onClick={handleSearch} endIcon={<SearchIcon/>}>Search</Button>
                     {
                         completedData.length !== 0 &&
                         <>
                             <div className='d-inline'>
-                                <Button variant="contained" color="error" className="float-end my-2 ms-1" onClick={handleAllDelete}>Clear All Completed Task</Button>
+                                <Button variant="contained" color="error" className="float-end my-2 ms-1" onClick={handleAllDelete} endIcon={<DeleteIcon/>}>Clear All Completed</Button>
                             </div>
                         </>
                     }
@@ -225,7 +230,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData }) => {
                                             }
                                         </td>
                                         {
-                                            data.status === false ? <td><button key={index} className='btn btn-danger' onClick={(e) => handleDelete(e, data.id)}>Delete</button></td> : <td></td>
+                                            data.status === false ? <td><Button key={index} color='error' onClick={(e) => handleDelete(e, data.id)} endIcon={<DeleteIcon/>} variant='contained'>Delete</Button></td> : <td></td>
                                         }
                                     </tr>
                                 </tbody>
