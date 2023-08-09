@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ArchiveIcon from '@mui/icons-material/Archive';
 
 
-const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData,setArchiveData }) => {
+const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData, archiveData, setArchiveData }) => {
 
     if (todoData.length == 0 && copyTodoData.length == 0)
         return;
@@ -14,7 +14,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
     const [searchData, setSearchData] = useState({
         priority: "",
         title: "",
-        tab:''
+        tab: ''
     })
     //end State
 
@@ -38,7 +38,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
 
     //Start AllDelete function
     function handleAllDelete() {
-        let allDel = window.confirm("Do You want to Delete All Item !")
+        let allDel = window.confirm(`Do You want to Delete {}  Item !`)
         if (allDel) {
             let clearData = todoData.filter((todo) => {
                 return todo.status === false
@@ -62,8 +62,9 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
     //End Archieve function
 
     //Start Delete Function
-    function handleDelete(e, id) {
-        let del = window.confirm(`Do You Want to Delete this Item!`)
+    function handleDelete(e, id, title) {
+        // console.log(title)
+        let del = window.confirm(`Do You Want to Delete ${title} Item!`)
         if (del) {
             let removeData = [...todoData];
             removeData = removeData.filter((todo) => {
@@ -82,7 +83,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
             return todo.status === true
         })
         setTodoCopyData(copyTodoData)
-        setSearchData({...searchData,tab:"completed"})
+        setSearchData({ ...searchData, tab: "completed" })
     }
     //end completed show function
 
@@ -90,7 +91,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
     function handleAllData(e) {
         let copyTodoData = [...todoData]
         setTodoCopyData(copyTodoData)
-        setSearchData({...searchData,tab:"all"})
+        setSearchData({ ...searchData, tab: "all" })
 
         // console.log(value)
     }
@@ -103,7 +104,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
             return todo.status !== true
         })
         setTodoCopyData(copyTodoData)
-        setSearchData({...searchData,tab:"pending"})
+        setSearchData({ ...searchData, tab: "pending" })
 
     }
     //end pending function
@@ -153,29 +154,29 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
 
 
 
-        if(searchData.tab==="all"){
-            copyData=[...todoData]
+        if (searchData.tab === "all") {
+            copyData = [...todoData]
         }
 
-        else if(searchData.tab==="completed"){
-            copyData=[...todoData.filter(todo=>todo.status===true)]
+        else if (searchData.tab === "completed") {
+            copyData = [...todoData.filter(todo => todo.status === true)]
         }
-        else{
-            copyData=[...todoData.filter(todo=>todo.status===false)]
+        else {
+            copyData = [...todoData.filter(todo => todo.status === false)]
 
         }
-        if(searchData.title && searchData.priority){
-            setTodoCopyData(copyData.filter((todo)=>{
+        if (searchData.title && searchData.priority) {
+            setTodoCopyData(copyData.filter((todo) => {
                 return todo.title.toLowerCase().includes(searchData.title.toLowerCase()) && todo.priority === searchData.priority
             }))
         }
-        else if(searchData.title){
-            setTodoCopyData(copyData.filter((todo)=>{
+        else if (searchData.title) {
+            setTodoCopyData(copyData.filter((todo) => {
                 return todo.title.toLowerCase().includes(searchData.title.toLowerCase())
             }))
         }
-        else if(searchData.priority){
-            setTodoCopyData(copyData.filter((todo)=>{
+        else if (searchData.priority) {
+            setTodoCopyData(copyData.filter((todo) => {
                 return todo.priority === searchData.priority
             }))
         }
@@ -192,7 +193,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
             <div className='bg-dark mt-5 text-light rounded p-3'>
                 <div className="justify-content-start d-flex">
                     {
-                        archiveData.length !== 0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve} endIcon={<ArchiveIcon/>}>Archived {archiveData.length}</Button>
+                        archiveData.length !== 0 && <Button variant='contained' color="success" className="mt-2 mb-3 float-start" onClick={handleArchieve} endIcon={<ArchiveIcon />}>Archived {archiveData.length}</Button>
                     }
                     <Button className="mt-2 mb-3 btn btn-danger" onClick={handleAllData} style={{ cursor: "pointer", color: "white" }} value="all">all</Button>
                     <Button className="mt-2  mb-3" onClick={handleCompleted} style={{ cursor: "pointer", color: "white" }}>Completed</Button>
@@ -204,12 +205,12 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
                         <option value="low" className='text-success'>Low</option>
                     </select>
                     <input type="text" className="form-control w-25 mt-2 ms-1 mb-3 " onChange={handleChange} name="title" placeholder='Enter Item Name for Search' />
-                    <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" }} variant='contained' onClick={handleSearch} endIcon={<SearchIcon/>}>Search</Button>
+                    <Button className="mt-2 ms-1 mb-3" style={{ cursor: "pointer" }} variant='contained' onClick={handleSearch} endIcon={<SearchIcon />}>Search</Button>
                     {
                         completedData.length !== 0 &&
                         <>
                             <div className='d-inline'>
-                                <Button variant="contained" color="error" className="my-2 ms-1" onClick={handleAllDelete} endIcon={<DeleteIcon/>}>Clear All Completed {completedData.length}</Button>
+                                <Button variant="contained" color="error" className="my-2 ms-1" onClick={handleAllDelete} endIcon={<DeleteIcon />}>Clear All Completed {completedData.length}</Button>
                             </div>
                         </>
                     }
@@ -232,10 +233,10 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
                                         <td key={index + 3}>{index + 1}</td>
                                         <td key={index + 4}><input type="checkbox" onChange={(e) => handleStatusChange(e, data.id)} checked={data.status} /></td>
                                         <td key={index + 5} >{
-                                            data.status===false
-                                            ?
-                                            data.priority === "high" ? <p className='fs-5 text-danger'>{data.title}</p> : data.priority === "medium" ? <p className='fs-5 text-warning'>{data.title}</p> : data.priority === "low" ? <p className='fs-5 text-success'>{data.title}</p> : <p>{data.title}</p>:
-                                            data.priority === "high" ? <strike className='fs-5 text-danger'>{data.title}</strike> : data.priority === "medium" ? <strike className='fs-5 text-warning'>{data.title}</strike> : data.priority === "low" ? <strike className='fs-5 text-success'>{data.title}</strike> : <strike>{data.title}</strike>
+                                            data.status === false
+                                                ?
+                                                data.priority === "high" ? <p className='fs-5 text-danger'>{data.title}</p> : data.priority === "medium" ? <p className='fs-5 text-warning'>{data.title}</p> : data.priority === "low" ? <p className='fs-5 text-success'>{data.title}</p> : <p>{data.title}</p> :
+                                                data.priority === "high" ? <strike className='fs-5 text-danger'>{data.title}</strike> : data.priority === "medium" ? <strike className='fs-5 text-warning'>{data.title}</strike> : data.priority === "low" ? <strike className='fs-5 text-success'>{data.title}</strike> : <strike>{data.title}</strike>
                                         }</td>
                                         <td>
                                             {
@@ -243,7 +244,7 @@ const Show = ({ todoData, setTodoData, copyTodoData, setTodoCopyData,archiveData
                                             }
                                         </td>
                                         {
-                                            data.status === false ? <td><Button key={index} color='error' onClick={(e) => handleDelete(e, data.id)} endIcon={<DeleteIcon/>} variant='contained'>Delete</Button></td> : <td></td>
+                                            data.status === false ? <td><Button key={index} color='error' onClick={(e) => handleDelete(e, data.id, data.title)} endIcon={<DeleteIcon />} variant='contained'>Delete</Button></td> : <td></td>
                                         }
                                     </tr>
                                 </tbody>
